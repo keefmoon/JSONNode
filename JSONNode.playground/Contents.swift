@@ -42,19 +42,6 @@ enum JSONNode {
     }
 }
 
-protocol JSONLeafValue { }
-extension String: JSONLeafValue { }
-extension Int: JSONLeafValue { }
-extension Double: JSONLeafValue { }
-extension Bool: JSONLeafValue { }
-extension Array: JSONLeafValue { }
-extension Dictionary: JSONLeafValue { }
-
-enum JSONPath {
-    case array(Int)
-    case dictionary(String)
-}
-
 extension JSONNode: CustomDebugStringConvertible {
     
     var debugDescription: String {
@@ -90,71 +77,36 @@ extension JSONNode: CustomDebugStringConvertible {
     }
 }
 
-
-
 extension JSONNode {
     
-    func value() -> [JSONNode]? {
-        guard case .array(let nodeArray) = self else { return nil }
-        return nodeArray
-    }
-    
-    func value() -> [String: JSONNode]? {
-        guard case .dictionary(let nodeDictionary) = self else { return nil }
-        return nodeDictionary
-    }
-    
-    func value() -> String? {
+    var string: String? {
         guard case .string(let stringValue) = self else { return nil }
         return stringValue
     }
     
-    func value() -> Int? {
+    var integer: Int? {
         guard case .integer(let intValue) = self else { return nil }
         return intValue
     }
     
-    func value() -> Double? {
+    var floatingPoint: Double? {
         guard case .floatingPoint(let doubleValue) = self else { return nil }
         return doubleValue
     }
     
-    func value() -> Bool? {
+    var boolean: Bool? {
         guard case .boolean(let boolValue) = self else { return nil }
         return boolValue
     }
     
-    func value<ReturnType: JSONLeafValue>(forPathComponents pathComponents: [JSONPath]) -> ReturnType? {
-        
-        guard let firstPath = pathComponents.first else {
-            switch self {
-            case .string(let stringValue):
-                return stringValue as? ReturnType
-            case .integer(let intValue):
-                return intValue as? ReturnType
-            case .floatingPoint(let doubleValue):
-                return doubleValue as? ReturnType
-            case .boolean(let boolValue):
-                return boolValue as? ReturnType
-            case .array(let nodeArray):
-                return nodeArray as? ReturnType
-            case .dictionary(let nodeDictionary):
-                return nodeDictionary as? ReturnType
-            }
-        }
-        
-        var onwardsComponents = pathComponents
-        onwardsComponents.removeFirst()
-        
-        switch (self, firstPath) {
-        case (.array(let nodeArray), .array(let index)):
-            guard index < nodeArray.count else { return nil }
-            return nodeArray[index].value(forPathComponents: onwardsComponents)
-        case (.dictionary(let nodeDictionary), .dictionary(let key)):
-            return nodeDictionary[key]?.value(forPathComponents: onwardsComponents)
-        default:
-            return nil
-        }
+    var array: [JSONNode]? {
+        guard case .array(let nodeArray) = self else { return nil }
+        return nodeArray
+    }
+    
+    var dictionary: [String: JSONNode]? {
+        guard case .dictionary(let nodeDictionary) = self else { return nil }
+        return nodeDictionary
     }
 }
 
@@ -181,6 +133,6 @@ if case .dictionary(let dict) = swiftJSON, let people = dict["people"], case .ar
 
 // MARK: Cool way to get values
 
-let myName: String? = swiftJSON.value(forPathComponents: [.dictionary("people"), .array(0), .dictionary("name")])
-let myAge: Int? = swiftJSON.value(forPathComponents: [.dictionary("people"), .array(0), .dictionary("age")])
-let myCompany: String? = swiftJSON.value(forPathComponents: [.dictionary("company")]) 
+let myName = swiftJSON.dictionary?["people"]?.array?[0].dictionary?["name"]?.string
+let myAge = swiftJSON.dictionary?["people"]?.array?[0].dictionary?["age"]?.integer
+let myCompany = swiftJSON.dictionary?["company"]?.string
