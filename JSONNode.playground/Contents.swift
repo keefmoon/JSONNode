@@ -127,7 +127,14 @@ swiftJSON.debugDescription
 
 // MARK: Ugly way to get values
 
-if case .dictionary(let dict) = swiftJSON, let people = dict["people"], case .array(let peopleArray) = people, let firstPerson = peopleArray.first, case .dictionary(let personDict) = firstPerson, let firstName = personDict["name"], case .string(let nameString) = firstName  {
+if 
+    case .dictionary(let dict) = swiftJSON, 
+    let people = dict["people"], 
+    case .array(let peopleArray) = people, 
+    let firstPerson = peopleArray.first, 
+    case .dictionary(let personDict) = firstPerson, 
+    let firstName = personDict["name"], 
+    case .string(let nameString) = firstName  {
     print("Person: \(nameString)")
 }
 
