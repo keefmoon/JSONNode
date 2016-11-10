@@ -1,8 +1,30 @@
-import Foundation
+//
+//  JSONNode.swift
+//  JSONNode
+//
+//  Created by Keith Moon on 09/11/2016.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
 
-// MARK: - JSON Node
-
-enum JSONNode {
+public enum JSONNode {
+    case null
     case string(String)
     case integer(Int)
     case floatingPoint(Double)
@@ -10,7 +32,7 @@ enum JSONNode {
     indirect case array([JSONNode])
     indirect case dictionary([String: JSONNode])
     
-    init?(JSON: Any) {
+    public init?(JSON: Any) {
         switch JSON {
         case let jsonString as String:
             self = .string(jsonString)
@@ -35,7 +57,7 @@ enum JSONNode {
         }
     }
     
-    init?(data: Data) {
+    public init?(data: Data) {
         guard let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) else { return nil }
         guard let node = JSONNode(JSON: json) else { return nil }
         self = node
@@ -44,7 +66,7 @@ enum JSONNode {
 
 extension JSONNode: CustomDebugStringConvertible {
     
-    var debugDescription: String {
+    public var debugDescription: String {
         switch self {
         case .string(let stringNode):
             return stringNode
@@ -73,73 +95,53 @@ extension JSONNode: CustomDebugStringConvertible {
             }
             returnString += "}"
             return returnString
+            
+        case .null:
+            return "NULL"
         }
     }
 }
 
 extension JSONNode {
     
-    var string: String? {
+    public var string: String? {
         guard case .string(let stringValue) = self else { return nil }
         return stringValue
     }
     
-    var integer: Int? {
+    public var integer: Int? {
         guard case .integer(let intValue) = self else { return nil }
         return intValue
     }
     
-    var floatingPoint: Double? {
+    public var floatingPoint: Double? {
         guard case .floatingPoint(let doubleValue) = self else { return nil }
         return doubleValue
     }
     
-    var boolean: Bool? {
+    public var boolean: Bool? {
         guard case .boolean(let boolValue) = self else { return nil }
         return boolValue
     }
     
-    var array: [JSONNode]? {
+    public var array: [JSONNode]? {
         guard case .array(let nodeArray) = self else { return nil }
         return nodeArray
     }
     
-    var dictionary: [String: JSONNode]? {
+    public var dictionary: [String: JSONNode]? {
         guard case .dictionary(let nodeDictionary) = self else { return nil }
         return nodeDictionary
     }
 }
 
-// MARK: Test JSON
-
-var testJSON = [String: Any]()
-let names: [[String: Any]] = [["name": "Keith Moon", "age": 36], ["name": "Alissa Moon", "age": 31]]
-testJSON["people"] = names
-testJSON["company"] = "Data Ninjitsu"
-testJSON["cool"] = true
-testJSON["coolness"] = 5.5
-testJSON["rating"] = 5
-
-// MARK: Swiftify
-
-let swiftJSON = JSONNode(JSON: testJSON)!
-swiftJSON.debugDescription
-
-// MARK: Ugly way to get values
-
-if 
-    case .dictionary(let dict) = swiftJSON, 
-    let people = dict["people"], 
-    case .array(let peopleArray) = people, 
-    let firstPerson = peopleArray.first, 
-    case .dictionary(let personDict) = firstPerson, 
-    let firstName = personDict["name"], 
-    case .string(let nameString) = firstName  {
-    print("Person: \(nameString)")
+extension JSONNode {
+    
+    public subscript(_ index: Int) -> JSONNode {
+        get { return array?[index] ?? .null }
+    }
+    
+    public subscript(_ key: String) -> JSONNode {
+        get { return dictionary?[key] ?? .null }
+    }
 }
-
-// MARK: Cool way to get values
-
-let myName = swiftJSON.dictionary?["people"]?.array?[0].dictionary?["name"]?.string
-let myAge = swiftJSON.dictionary?["people"]?.array?[0].dictionary?["age"]?.integer
-let myCompany = swiftJSON.dictionary?["company"]?.string
