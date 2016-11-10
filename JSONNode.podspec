@@ -186,7 +186,7 @@ To use this library in your project manually you may:
   s.source_files  = "JSONNode", "JSONNode/JSONNode/*.{swift}"
 
   # ――― Swift Version ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '3.0' }
+  #s.pod_target_xcconfig = { 'SWIFT_VERSION' => '3.0' }
 
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
