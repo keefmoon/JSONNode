@@ -29,7 +29,7 @@ JSONNode is simple, useful, and under 150 lines of code.
 
 ## Advantage over traditional JSON handling
 
-Let's take the response from the ImgFlip API
+Let's take the response from the ImgFlip Meme API
 
 ```JSON
 {
@@ -56,21 +56,25 @@ Let's take the response from the ImgFlip API
 ```
 
 To retrieve the name for the first meme, you would do the following:
+
 ```Swift
 var jsonObject = try! JSONSerialization.jsonObject(with: jsonData, options: [.allowFragments])
 
 guard
-let jsonDictionary = jsonObject as? [String: Any],
-let dataDictionary = jsonDictionary["data"] as? [String: Any],
-let memesArray = dataDictionary["memes"] as? [[String: Any]],
-let firstMeme = memesArray.first,
-let memeName = firstMeme["name"] as? String else {
+    let jsonDictionary = jsonObject as? [String: Any],
+    let dataDictionary = jsonDictionary["data"] as? [String: Any],
+    let memesArray = dataDictionary["memes"] as? [[String: Any]],
+    let firstMeme = memesArray.first,
+    let memeName = firstMeme["name"] as? String else {
 
-fatalError()
+        fatalError()
 }
+
+print(memeName)
 ```
 
 With JSONNode this becomes the following:
+
 ```Swift
 var jsonNode = JSONNode(data: jsonData)!
 guard let name = jsonNode["data"]["memes"][0]["name"].string else { fatalError() }
@@ -122,8 +126,6 @@ To use this library in your project manually you may:
 
 1. for Projects, just drag JSONNode.swift to the project tree
 2. for Workspaces, include the whole JSONNode.xcodeproj
-
-
 
                    DESC
 
