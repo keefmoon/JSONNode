@@ -183,7 +183,7 @@ To use this library in your project manually you may:
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "JSONNode", "JSONNode/**/*.{swift}"
+  s.source_files  = "JSONNode", "JSONNode/JSONNode/*.{swift}"
 
   # ――― Swift Version ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   s.pod_target_xcconfig = { 'SWIFT_VERSION' => '3.0' }
