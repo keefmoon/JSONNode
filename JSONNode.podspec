@@ -173,7 +173,7 @@ To use this library in your project manually you may:
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/keefmoon/JSONNode.git", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/keefmoon/JSONNode.git", :tag => "1.1.0" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
