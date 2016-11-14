@@ -49,7 +49,7 @@ print(memeName)
 
 // MARK: Using JSONNode
 
-var jsonNode = JSONNode(data: jsonData)!
+var jsonNode = try! JSONNode(data: jsonData)
 guard let name = jsonNode["data"]["memes"][0]["name"].string else { fatalError() }
 
 print(name)

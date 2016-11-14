@@ -5,7 +5,8 @@
       location = "group:JSONNodeExample.playground">
    </FileRef>
    <FileRef
-      location = "group:JSONNode.podspec">
+      location = "group:JSONNode.podspec"
+      assignedFileDataType = "public.ruby-script">
    </FileRef>
    <FileRef
       location = "group:README.md">

@@ -32,7 +32,7 @@ public enum JSONNode {
     indirect case array([JSONNode])
     indirect case dictionary([String: JSONNode])
     
-    public init?(JSON: Any) {
+    public init(JSON: Any) {
         switch JSON {
         case let jsonString as String:
             self = .string(jsonString)
@@ -47,20 +47,17 @@ public enum JSONNode {
         case let jsonDictionary as Dictionary<String, Any>:
             var dictionary = [String: JSONNode]()
             for (key, value) in jsonDictionary {
-                if let node = JSONNode(JSON: value) {
-                    dictionary[key] = node
-                }
+                dictionary[key] = JSONNode(JSON: value)
             }
             self = .dictionary(dictionary)
         default:
-            return nil
+            self = .null
         }
     }
     
-    public init?(data: Data) {
-        guard let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) else { return nil }
-        guard let node = JSONNode(JSON: json) else { return nil }
-        self = node
+    public init(data: Data) throws {
+        let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+        self = JSONNode(JSON: json)
     }
 }
 

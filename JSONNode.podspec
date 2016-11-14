@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "JSONNode"
-  s.version      = "1.0.0"
+  s.version      = "1.1.0"
   s.summary      = "A simple, Swifty way to interact with JSON"
 
   s.description  = <<-DESC
@@ -76,7 +76,7 @@ print(memeName)
 With JSONNode this becomes the following:
 
 ```Swift
-var jsonNode = JSONNode(data: jsonData)!
+var jsonNode = try! JSONNode(data: jsonData)
 guard let name = jsonNode["data"]["memes"][0]["name"].string else { fatalError() }
 
 print(name)
@@ -98,7 +98,6 @@ With this finite list of possible values for a JSON node, a enum is the best way
 
 ## Requirements
 
-- iOS 8.0+ | macOS 10.7+ | tvOS 9.0+ | watchOS 2.0+
 - Swift 3
 - Xcode 8
 
@@ -188,7 +187,7 @@ To use this library in your project manually you may:
   s.source_files  = "JSONNode", "JSONNode/JSONNode/*.{swift}"
 
   # ――― Swift Version ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '3.0.1' }
+  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '3.0' }
 
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
