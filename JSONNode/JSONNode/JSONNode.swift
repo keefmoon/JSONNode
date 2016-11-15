@@ -142,3 +142,51 @@ extension JSONNode {
         get { return dictionary?[key] ?? .null }
     }
 }
+
+extension JSONNode {
+    
+    public func serialise() -> Data {
+        let unwrappedNode = unwrapped(for: self)
+        // We can try! because we know a JSONNode can't be anything other than JSOM serialisable.
+        // One of the great things about JSONNode :)
+        return try! JSONSerialization.data(withJSONObject: unwrappedNode, options: .prettyPrinted)
+    }
+    
+    private func unwrapped(for node: JSONNode) -> Any {
+        
+        switch node {
+        case .string(let stringNode):
+            return stringNode
+            
+        case .integer(let intNode):
+            return intNode
+            
+        case .floatingPoint(let doubleNode):
+            return doubleNode
+            
+        case .boolean(let boolNode):
+            return boolNode
+            
+        case .array(let arrayNode):
+            return unwrappedArray(for: arrayNode)
+            
+        case .dictionary(let dictionaryNode):
+            return unwrappedDictionary(for: dictionaryNode)
+            
+        case .null:
+            return NSNull()
+        }
+    }
+    
+    private func unwrappedArray(for nodeArray: [JSONNode]) -> [Any] {
+        return nodeArray.map { unwrapped(for: $0) }
+    }
+    
+    private func unwrappedDictionary(for nodeDictionary: [String: JSONNode]) -> [String: Any] {
+        var dictionary = [String: Any]()
+        for (key, value) in nodeDictionary {
+            dictionary[key] = unwrapped(for: value)
+        }
+        return dictionary
+    }
+}
