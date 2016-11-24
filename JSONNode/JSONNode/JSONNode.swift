@@ -23,6 +23,8 @@
 //  THE SOFTWARE.
 //
 
+import Foundation
+
 public enum JSONNode {
     case null
     case string(String)
