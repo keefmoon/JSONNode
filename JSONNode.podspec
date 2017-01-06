@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "JSONNode"
-  s.version      = "1.2.2"
+  s.version      = "1.2.3"
   s.summary      = "A simple, Swifty way to interact with JSON"
 
   s.description  = <<-DESC
