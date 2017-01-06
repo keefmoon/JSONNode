@@ -33,17 +33,13 @@ public enum JSONNode {
     case boolean(Bool)
     indirect case array([JSONNode])
     indirect case dictionary([String: JSONNode])
-    
+
     public init(JSON: Any) {
         switch JSON {
         case let jsonString as String:
             self = .string(jsonString)
-        case let jsonInt as Int:
-            self = .integer(jsonInt)
-        case let jsonDouble as Double:
-            self = .floatingPoint(jsonDouble)
-        case let jsonBool as Bool:
-            self = .boolean(jsonBool)
+        case let jsonNumber as NSNumber:
+            self = JSONNode.nodeRepresentation(fromNumber: jsonNumber)
         case let jsonArray as Array<Any>:
             self = .array(jsonArray.flatMap { JSONNode(JSON: $0) })
         case let jsonDictionary as Dictionary<String, Any>:
@@ -56,29 +52,44 @@ public enum JSONNode {
             self = .null
         }
     }
-    
+
     public init(data: Data) throws {
         let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
         self = JSONNode(JSON: json)
     }
+    
+    private static func nodeRepresentation(fromNumber number: NSNumber) -> JSONNode {
+        
+        if NSNumber(booleanLiteral: true).objCType == number.objCType {
+            return .boolean(number.boolValue)
+        } else if NSNumber(value: 3).objCType == number.objCType {
+            return .integer(number.intValue)
+        } else if NSNumber(value: 3.14).objCType == number.objCType {
+            return .floatingPoint(number.doubleValue)
+        } else {
+            return .null
+        }
+        
+        // TODO: Support numbers outside of double range, think JSONSerialization represents them as NSDecimalNumber
+    }
 }
 
 extension JSONNode: CustomDebugStringConvertible {
-    
+
     public var debugDescription: String {
         switch self {
         case .string(let stringNode):
             return stringNode
-            
+
         case .integer(let intNode):
             return String(intNode)
-            
+
         case .floatingPoint(let doubleNode):
             return String(doubleNode)
-            
+
         case .boolean(let boolNode):
             return String(boolNode)
-            
+
         case .array(let arrayNode):
             var returnString = "["
             for node in arrayNode {
@@ -86,7 +97,7 @@ extension JSONNode: CustomDebugStringConvertible {
             }
             returnString += "]"
             return returnString
-            
+
         case .dictionary(let dictionaryNode):
             var returnString = "{"
             for (key, value) in dictionaryNode.enumerated() {
@@ -94,7 +105,7 @@ extension JSONNode: CustomDebugStringConvertible {
             }
             returnString += "}"
             return returnString
-            
+
         case .null:
             return "NULL"
         }
@@ -102,32 +113,32 @@ extension JSONNode: CustomDebugStringConvertible {
 }
 
 extension JSONNode {
-    
+
     public var string: String? {
         guard case .string(let stringValue) = self else { return nil }
         return stringValue
     }
-    
+
     public var integer: Int? {
         guard case .integer(let intValue) = self else { return nil }
         return intValue
     }
-    
+
     public var floatingPoint: Double? {
         guard case .floatingPoint(let doubleValue) = self else { return nil }
         return doubleValue
     }
-    
+
     public var boolean: Bool? {
         guard case .boolean(let boolValue) = self else { return nil }
         return boolValue
     }
-    
+
     public var array: [JSONNode]? {
         guard case .array(let nodeArray) = self else { return nil }
         return nodeArray
     }
-    
+
     public var dictionary: [String: JSONNode]? {
         guard case .dictionary(let nodeDictionary) = self else { return nil }
         return nodeDictionary
@@ -135,60 +146,93 @@ extension JSONNode {
 }
 
 extension JSONNode {
-    
+
     public subscript(_ index: Int) -> JSONNode {
         get { return array?[index] ?? .null }
     }
-    
+
     public subscript(_ key: String) -> JSONNode {
         get { return dictionary?[key] ?? .null }
     }
 }
 
 extension JSONNode {
-    
+
     public func serialise() -> Data {
         let unwrappedNode = unwrapped(for: self)
         // We can try! because we know a JSONNode can't be anything other than JSOM serialisable.
         // One of the great things about JSONNode :)
         return try! JSONSerialization.data(withJSONObject: unwrappedNode, options: .prettyPrinted)
     }
-    
+
     private func unwrapped(for node: JSONNode) -> Any {
-        
+
         switch node {
         case .string(let stringNode):
             return stringNode
-            
+
         case .integer(let intNode):
             return intNode
-            
+
         case .floatingPoint(let doubleNode):
             return doubleNode
-            
+
         case .boolean(let boolNode):
             return boolNode
-            
+
         case .array(let arrayNode):
             return unwrappedArray(for: arrayNode)
-            
+
         case .dictionary(let dictionaryNode):
             return unwrappedDictionary(for: dictionaryNode)
-            
+
         case .null:
             return NSNull()
         }
     }
-    
+
     private func unwrappedArray(for nodeArray: [JSONNode]) -> [Any] {
         return nodeArray.map { unwrapped(for: $0) }
     }
-    
+
     private func unwrappedDictionary(for nodeDictionary: [String: JSONNode]) -> [String: Any] {
         var dictionary = [String: Any]()
         for (key, value) in nodeDictionary {
             dictionary[key] = unwrapped(for: value)
         }
         return dictionary
+    }
+}
+
+extension JSONNode: Equatable {
+    
+    public static func ==(lhs: JSONNode, rhs: JSONNode) -> Bool {
+        
+        switch (lhs, rhs) {
+            
+        case (.null, .null):
+            return true
+            
+        case (.string(let lhsValue), .string(let rhsValue)):
+            return lhsValue == rhsValue
+            
+        case (.integer(let lhsValue), .integer(let rhsValue)):
+            return lhsValue == rhsValue
+            
+        case (.floatingPoint(let lhsValue), .floatingPoint(let rhsValue)):
+            return lhsValue == rhsValue
+            
+        case (.boolean(let lhsValue), .boolean(let rhsValue)):
+            return lhsValue == rhsValue
+            
+        case (.array(let lhsValue), .array(let rhsValue)):
+            return lhsValue == rhsValue
+            
+        case (.dictionary(let lhsValue), .dictionary(let rhsValue)):
+            return lhsValue == rhsValue
+            
+        default:
+            return false
+        }
     }
 }

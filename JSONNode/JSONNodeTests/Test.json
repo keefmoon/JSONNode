@@ -1,0 +1,17 @@
+{
+    "string" : "This is a string",
+    "int" : 5,
+    "floatingPoint" : 3.14,
+    "bool" : true,
+    "array" : [
+        "arrayValue1",
+        "arrayValue2",
+        "arrayValue3"
+    ],
+    "dictionary" : {
+        "key1" : "value1",
+        "key2" : "value2",
+        "key3" : "value3"
+    },
+    "null" : null
+}
