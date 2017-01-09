@@ -50,6 +50,7 @@ print(memeName)
 // MARK: Using JSONNode
 
 var jsonNode = try! JSONNode(data: jsonData)
+print(jsonNode.debugDescription)
 guard let name = jsonNode["data"]["memes"][0]["name"].string else { fatalError() }
 
-print(name)
+//print(name)

@@ -77,37 +77,44 @@ public enum JSONNode {
 extension JSONNode: CustomDebugStringConvertible {
 
     public var debugDescription: String {
+        return nodeDescription(withIndent: " ")
+    }
+    
+    private func nodeDescription(withIndent indent: String) -> String {
+        
+        let nextIndent = indent + indent
+        
         switch self {
         case .string(let stringNode):
-            return stringNode
+            return indent + stringNode
 
         case .integer(let intNode):
-            return String(intNode)
+            return indent + String(intNode)
 
         case .floatingPoint(let doubleNode):
-            return String(doubleNode)
+            return indent + String(doubleNode)
 
         case .boolean(let boolNode):
-            return String(boolNode)
+            return indent + String(boolNode)
 
         case .array(let arrayNode):
-            var returnString = "["
+            var returnString = indent + "[\n"
             for node in arrayNode {
-                returnString += "\(node.debugDescription), "
+                returnString += "\(node.nodeDescription(withIndent: nextIndent))\n, "
             }
-            returnString += "]"
+            returnString += indent + "]"
             return returnString
 
         case .dictionary(let dictionaryNode):
-            var returnString = "{"
-            for (key, value) in dictionaryNode.enumerated() {
-                returnString += "\(key): \(value), "
+            var returnString = indent + "{"
+            for (key, value) in dictionaryNode {
+                returnString += nextIndent + "\(key): \n\(value.nodeDescription(withIndent: nextIndent + indent)), "
             }
-            returnString += "}"
+            returnString +=  indent + "}"
             return returnString
 
         case .null:
-            return "NULL"
+            return indent + "NULL"
         }
     }
 }
