@@ -60,13 +60,14 @@ public enum JSONNode {
     
     private static func nodeRepresentation(fromNumber number: NSNumber) -> JSONNode {
         
-        if NSNumber(booleanLiteral: true).objCType == number.objCType {
+        switch String(cString: number.objCType) {
+        case String(cString: NSNumber(booleanLiteral: true).objCType):
             return .boolean(number.boolValue)
-        } else if NSNumber(value: 3).objCType == number.objCType {
+        case String(cString: NSNumber(value: 3).objCType):
             return .integer(number.intValue)
-        } else if NSNumber(value: 3.14).objCType == number.objCType {
+        case String(cString: NSNumber(value: 3.14).objCType):
             return .floatingPoint(number.doubleValue)
-        } else {
+        default:
             return .null
         }
         
