@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "JSONNode"
-  s.version      = "1.2.3"
+  s.version      = "1.2.4"
   s.summary      = "A simple, Swifty way to interact with JSON"
 
   s.description  = <<-DESC
@@ -173,7 +173,7 @@ To use this library in your project manually you may:
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/keefmoon/JSONNode.git", :tag => "1.2.3" }
+  s.source       = { :git => "https://github.com/keefmoon/JSONNode.git", :tag => "1.2.4" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
