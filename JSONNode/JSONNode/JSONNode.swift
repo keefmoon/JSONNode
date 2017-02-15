@@ -61,17 +61,73 @@ public enum JSONNode {
     private static func nodeRepresentation(fromNumber number: NSNumber) -> JSONNode {
         
         switch String(cString: number.objCType) {
+            
         case String(cString: NSNumber(booleanLiteral: true).objCType):
+            
+            //
+            // Bool types
+            //
+            
             return .boolean(number.boolValue)
-        case String(cString: NSNumber(value: 3).objCType):
-            return .integer(number.intValue)
-        case String(cString: NSNumber(value: 3.14).objCType):
-            return .floatingPoint(number.doubleValue)
-        default:
-            return .null
-        }
         
-        // TODO: Support numbers outside of double range, think JSONSerialization represents them as NSDecimalNumber
+            //
+            // Int types
+            //
+            
+            // Basic types
+        case String(cString: NSNumber(value: Int(3)).objCType):
+            return .integer(number.intValue)
+            
+        case String(cString: NSNumber(value: UInt(3)).objCType):
+            return .integer(number.intValue)
+            
+            // 8 bit types
+        case String(cString: NSNumber(value: Int8(3)).objCType):
+            return .integer(number.intValue)
+            
+        case String(cString: NSNumber(value: UInt8(3)).objCType):
+            return .integer(number.intValue)
+            
+            // 16 bit types
+        case String(cString: NSNumber(value: Int16(3)).objCType):
+            return .integer(number.intValue)
+            
+        case String(cString: NSNumber(value: UInt16(3)).objCType):
+            return .integer(number.intValue)
+            
+        // 32 bit types
+        case String(cString: NSNumber(value: Int32(3)).objCType):
+            return .integer(number.intValue)
+            
+        case String(cString: NSNumber(value: UInt32(3)).objCType):
+            return .integer(number.intValue)
+            
+        // 64 bit types
+        case String(cString: NSNumber(value: Int64(3)).objCType):
+            return .integer(number.intValue)
+            
+        case String(cString: NSNumber(value: UInt64(3)).objCType):
+            return .integer(number.intValue)
+            
+        case String(cString: NSNumber(value: INT64_MAX).objCType):
+            return .integer(number.intValue)
+            
+            //
+            // Floating Point types
+            //
+            
+        case String(cString: NSNumber(value: Float(3.14)).objCType):
+            return .floatingPoint(number.doubleValue)
+        
+        case String(cString: NSNumber(value: Double(3.14)).objCType):
+            return .floatingPoint(number.doubleValue)
+            
+            //
+            // Fallback to Floating Point type
+            //
+        default:
+            return .floatingPoint(number.doubleValue)
+        }
     }
 }
 
