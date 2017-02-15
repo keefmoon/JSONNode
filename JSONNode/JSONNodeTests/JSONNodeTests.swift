@@ -38,7 +38,7 @@ class JSONNodeTests: XCTestCase {
         XCTAssertEqual(string, "This is a string")
     }
     
-    func testCanReadInt() {
+    func testCanReadInteger() {
         
         let node = rootJSON["int"]
         
@@ -97,12 +97,99 @@ class JSONNodeTests: XCTestCase {
         XCTAssertEqual(dictionary, expected)
     }
     
-    func testCanReadInt64() {
+    // Test Int types
+    
+    func testCanReadInt() {
         
-        let someJSON = ["int64": NSNumber(value: Int64(1234567890))]
+        let someJSON = ["int": NSNumber(value: Int(12345))]
         let node = JSONNode(JSON: someJSON)
         
-        guard let intValue = node["int64"].integer else {
+        guard let intValue = node["int"].integer else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(intValue, 12345)
+    }
+    
+    func testCanReadUInt() {
+        
+        let someJSON = ["int": NSNumber(value: UInt(12345))]
+        let node = JSONNode(JSON: someJSON)
+        
+        guard let intValue = node["int"].integer else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(intValue, 12345)
+    }
+    
+    func testCanReadInt8() {
+        
+        let someJSON = ["int": NSNumber(value: Int8(2))]
+        let node = JSONNode(JSON: someJSON)
+        
+        // https://twitter.com/keefmoon/status/831900139837124608
+        
+        // 32-bit behaviour
+        if let intValue = node["int"].integer {
+            XCTAssertEqual(intValue, 2)
+            return
+        }
+        // 64-bit behaviour
+        else if let boolValue = node["int"].boolean {
+            XCTAssertTrue(boolValue)
+        } else {
+            XCTFail()
+        }
+    }
+    
+    func testCanReadUInt8() {
+        
+        let someJSON = ["int": NSNumber(value: UInt8(1))]
+        let node = JSONNode(JSON: someJSON)
+        
+        guard let intValue = node["int"].integer else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(intValue, 1)
+    }
+    
+    func testCanReadInt16() {
+        
+        let someJSON = ["int": NSNumber(value: Int16(12))]
+        let node = JSONNode(JSON: someJSON)
+        
+        guard let intValue = node["int"].integer else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(intValue, 12)
+    }
+    
+    func testCanReadUInt16() {
+        
+        let someJSON = ["int": NSNumber(value: UInt16(12345))]
+        let node = JSONNode(JSON: someJSON)
+        
+        guard let intValue = node["int"].integer else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(intValue, 12345)
+    }
+    
+    func testCanReadInt32() {
+        
+        let someJSON = ["int": NSNumber(value: Int32(1234567890))]
+        let node = JSONNode(JSON: someJSON)
+        
+        guard let intValue = node["int"].integer else {
             XCTFail()
             return
         }
@@ -110,18 +197,45 @@ class JSONNodeTests: XCTestCase {
         XCTAssertEqual(intValue, 1234567890)
     }
     
-    func testCanReadInt32() {
+    func testCanReadUInt32() {
         
-        let someJSON = ["int32": NSNumber(value: Int32(12345))]
+        let someJSON = ["int": NSNumber(value: UInt32(1234567890))]
         let node = JSONNode(JSON: someJSON)
         
-        guard let intValue = node["int32"].integer else {
+        guard let intValue = node["int"].integer else {
             XCTFail()
             return
         }
         
-        XCTAssertEqual(intValue, 12345)
+        XCTAssertEqual(intValue, 1234567890)
     }
+    
+    func testCanReadInt64() {
+        
+        let someJSON = ["int": NSNumber(value: Int64(1234567890))]
+        let node = JSONNode(JSON: someJSON)
+        
+        guard let intValue = node["int"].integer else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(intValue, 1234567890)
+    }
+    
+    func testCanReadUInt64() {
+        
+        let someJSON = ["int": NSNumber(value: UInt64(1234567890))]
+        let node = JSONNode(JSON: someJSON)
+        
+        guard let intValue = node["int"].integer else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(intValue, 1234567890)
+    }
+    
     
     func testCanReadIntOver64bit() {
         
