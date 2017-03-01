@@ -2,7 +2,7 @@
 
 A simple, Swifty way to interact with JSON.
 
-JSONNode is simple, useful, and under 150 lines of code.
+JSONNode is simple, useful, and under 175 lines of code.
 
 ## Advantage over traditional JSON handling
 
