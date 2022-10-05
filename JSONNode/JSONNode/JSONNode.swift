@@ -41,7 +41,7 @@ public enum JSONNode {
         case let jsonNumber as NSNumber:
             self = JSONNode.nodeRepresentation(fromNumber: jsonNumber)
         case let jsonArray as Array<Any>:
-            self = .array(jsonArray.flatMap { JSONNode(JSON: $0) })
+            self = .array(jsonArray.compactMap { JSONNode(JSON: $0) })
         case let jsonDictionary as Dictionary<String, Any>:
             var dictionary = [String: JSONNode]()
             for (key, value) in jsonDictionary {
